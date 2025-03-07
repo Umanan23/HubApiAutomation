@@ -33,4 +33,4 @@ jobs:
         run: npx playwright test tests/auth.test.js
 
       - name: Run Account API Tests
-        run: npx playwright test tests/account.test.js
+        run: npx playwright test tests/api.test.js
