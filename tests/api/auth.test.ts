@@ -33,4 +33,5 @@ test("POST /iam/token - Generate Auth Token", async ({ request }) => {
 
   // Save Token for Later Use
   setToken(responseBody.access_token, responseBody.token_type, responseBody.expires_in);
+  console.log("🔄 Token Saved Successfully!");
 });

@@ -1,11 +1,12 @@
-name: API Automation Tests
+name: API Tests
 
 on:
   push:
     branches:
       - main
   pull_request:
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
   api-tests:
@@ -13,24 +14,21 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
       - name: Set Playwright Execution Permissions
-        run: chmod +x node_modules/.bin/playwright
-
-      - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Generate Authentication Token
         run: npx playwright test tests/api/auth.test.ts
 
       - name: Run API Tests
-        run: npx playwright test tests/api/*.test.ts
+        run: npx playwright test tests/api

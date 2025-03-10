@@ -1,15 +1,18 @@
 import { APIRequestContext } from "@playwright/test";
 import { credentials } from "../config/credentials";
-import { tokenData } from "../config/token";  // Ensure this is correctly imported
+import { tokenData, loadToken } from "../config/token"; // Load token function
 
 export async function makeApiRequest(apiContext: APIRequestContext, endpoint: string) {
-  const url = `${credentials.baseUrl}${endpoint}`;
-  console.log(`🔄 Requesting: ${url}`);
-  console.log(`🛠 Using Token: ${tokenData.token_type} ${tokenData.access_token}`);
+  // Load the token before making requests
+  loadToken();
 
   if (!tokenData.access_token) {
     throw new Error("❌ No authentication token found. Run auth.test.ts first.");
   }
+
+  const url = `${credentials.baseUrl}${endpoint}`;
+  console.log(`🔄 Requesting: ${url}`);
+  console.log(`🛠 Using Token: ${tokenData.token_type} ${tokenData.access_token}`);
 
   const response = await apiContext.get(url, {
     headers: {
