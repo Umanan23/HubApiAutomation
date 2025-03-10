@@ -23,14 +23,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set Playwright Execution Permissions  # ✅ Fix: Grant execution permission
+      - name: Set Playwright Execution Permissions
         run: chmod +x node_modules/.bin/playwright
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Generate Authentication Token
-        run: npx playwright test tests/auth.test.js
+        run: npx playwright test tests/api/auth.test.ts
 
-      - name: Run Account API Tests
-        run: npx playwright test tests/api.test.js
+      - name: Run API Tests
+        run: npx playwright test tests/api/*.test.ts
