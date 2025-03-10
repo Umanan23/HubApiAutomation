@@ -1,5 +1,5 @@
 export const credentials = {
   baseUrl: "https://stage.anaconda.com/api",
-  username: "your-email@example.com",
-  password: "your-password",
+  username: "usamamanan23@gmail.com",
+  password: "Usama12345",
 };
