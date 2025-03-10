@@ -1,13 +1,15 @@
 import { APIRequestContext } from "@playwright/test";
 import { credentials } from "../config/credentials";
-import { setToken } from "../config/token";  // ✅ Correct import
+import { tokenData } from "../config/token";  // Ensure this is correctly imported
 
 export async function makeApiRequest(apiContext: APIRequestContext, endpoint: string) {
   const url = `${credentials.baseUrl}${endpoint}`;
   console.log(`🔄 Requesting: ${url}`);
+  console.log(`🛠 Using Token: ${tokenData.token_type} ${tokenData.access_token}`);
 
-  // ✅ Get latest token dynamically
-  const tokenData = { token_type: "Bearer", access_token: "your_access_token" }; // Replace with actual token data retrieval logic
+  if (!tokenData.access_token) {
+    throw new Error("❌ No authentication token found. Run auth.test.ts first.");
+  }
 
   const response = await apiContext.get(url, {
     headers: {
