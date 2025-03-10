@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { credentials } from "../config/credentials";
-import { setToken } from "../config/token";
+import { credentials } from "../../config/credentials";
+import { setToken } from "../../config/token";
 
 test("POST /iam/token - Generate Auth Token", async ({ request }) => {
   console.log("🔄 Requesting Authentication Token...");

@@ -1,6 +1,6 @@
 import { test, expect, request } from "@playwright/test";
-import { makeApiRequest } from "../services/apiService";
-import { tokenData } from "../config/token";
+import { makeApiRequest } from "../../services/apiService";
+import { tokenData } from "../../config/token";
 
 test.describe("Anaconda API Tests - Account", () => {
   let apiContext: any;
