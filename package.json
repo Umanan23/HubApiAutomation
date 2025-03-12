@@ -15,9 +15,6 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "devDependencies": {
-    "@anaconda/playwright-utils": "1.1.2"
-  },
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
@@ -53,5 +50,8 @@
       "cross-env eslint --fix",
       "cross-env prettier --write"
     ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0"
   }
 }
