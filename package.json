@@ -21,23 +21,23 @@
     "build": "tsc",
     "validate": "tsc --noEmit",
     "ready": "rimraf dist node_modules package-lock.json && npm i",
-    "test": "playwright test",
-    "test:chromium": "playwright test --retries 0 --project=chromiumheadless",
-    "test:chromium-headed": "playwright test -j 1 --retries 0 --headed --project=chromium",
-    "test:functional": "playwright test --project=chromium -g '@functional'",
-    "test:smoke": "playwright test --project=chromiumheadless -g '@smoke'",
-    "local": "playwright test -j 1 --retries 0 --headed --project=chromium",
-    "test:reg": "playwright test --project=chromiumheadless --grep-invert '@fail'",
-    "report": "playwright show-report playwright-report",
-    "ui": "playwright test --project=chromiumheadless --ui-port 0",
-    "trace": "playwright show-trace --port 0",
-    "record": "playwright codegen",
+    "test": "npx playwright test",
+    "test:chromium": "npx playwright test --retries 0 --project=chromium",
+    "test:chromium-headed": "npx playwright test -j 1 --retries 0 --headed --project=chromium",
+    "test:functional": "npx playwright test --project=chromium -g '@functional'",
+    "test:smoke": "npx playwright test --project=chromiumheadless -g '@smoke'",
+    "local": "npx playwright test -j 1 --retries 0 --headed --project=chromium",
+    "test:reg": "npx playwright test --project=chromiumheadless --grep-invert '@fail'",
+    "report": "npx playwright show-report playwright-report",
+    "ui": "npx playwright test --project=chromiumheadless --ui-port 0",
+    "trace": "npx playwright show-trace --port 0",
+    "record": "npx playwright codegen",
     "clear:storage": "rimraf playwright/.auth",
-    "allure": "allure generate ./allure-results --clean && allure open ./allure-report",
+    "allure": "npx allure generate ./allure-results --clean && npx allure open ./allure-report",
     "lint": "cross-env eslint 'tests/**/*.ts' 'test-setup/**/*.ts' 'playwright.config.ts'",
     "lint:fix": "cross-env eslint 'tests/**/*.ts' 'test-setup/**/*.ts' 'playwright.config.ts' --fix",
     "format": "cross-env prettier --write 'tests/**/*.ts' 'test-setup/**/*.ts' 'playwright.config.ts' '.eslintrc.js' '**/*.json' '**/*.md' '!package-lock.json' '!dist/**/*' '!build/**/*'",
-    "postinstall": "npx playwright install"
+    "postinstall": "npx playwright install --with-deps"
   },
   "husky": {
     "hooks": {
@@ -54,7 +54,11 @@
   "devDependencies": {
     "@playwright/test": "^1.51.0",
     "@types/dotenv": "^6.1.1",
-    "@types/node": "^22.13.10"
+    "@types/node": "^22.13.10",
+    "rimraf": "^5.0.1",
+    "eslint": "^8.53.0",
+    "prettier": "^3.2.5",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "dotenv": "^16.4.7"
