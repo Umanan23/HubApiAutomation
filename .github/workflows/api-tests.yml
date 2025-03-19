@@ -21,7 +21,19 @@ jobs:
         with:
           node-version: '18'
 
-      # ✅ Create .env file manually (Ensure these values are correct!)
+      - name: Install dependencies
+        run: |
+          rm -rf node_modules package-lock.json  # Clean install
+          npm cache clean --force
+          npm install
+
+      - name: Set Playwright Execution Permissions
+        run: chmod +x node_modules/.bin/playwright
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # ✅ Create .env file with credentials
       - name: Create .env file
         run: |
           echo "BASE_URL=https://stage.anaconda.com/api" >> .env
@@ -29,33 +41,18 @@ jobs:
           echo "API_PASSWORD=Usama12345" >> .env
         shell: bash
 
-      # ✅ Verify .env File Content
-      - name: Verify .env File
-        run: cat .env  
-
-      # ✅ Install dependencies with a clean setup
-      - name: Install dependencies
-        run: |
-          rm -rf node_modules package-lock.json
-          npm cache clean --force
-          npm install
-
-      # ✅ Set permissions for Playwright execution
-      - name: Set Playwright Execution Permissions
-        run: chmod +x node_modules/.bin/playwright
-
-      # ✅ Install Playwright Browsers
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      # ✅ Run Authentication Test (Get Auth Token)
-      - name: Generate Authentication Token
+      # ✅ Run Authentication Token Test (Headless Mode)
+      - name: Generate Authentication Token (Headless)
         run: npx playwright test tests/api/auth.test.ts
 
-      # ✅ Verify that token.json file is updated correctly
-      - name: Check Token File
-        run: cat config/token.json
-
-      # ✅ Run API Tests Only If Auth Token is Available
+      # ✅ Run API Tests
       - name: Run API Tests
         run: npx playwright test tests/api
+
+      # ✅ (Optional) Debugging - Show Logs if Failure
+      - name: Upload Playwright Reports
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: playwright-report/

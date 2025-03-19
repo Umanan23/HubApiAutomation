@@ -5,13 +5,12 @@ import { setToken } from "../../config/token";
 test("POST /iam/token - Generate Auth Token", async () => {
   console.log("🔄 Requesting Authentication Token...");
 
-  // Use a real browser (non-headless mode)
-  const browser = await chromium.launch({ headless: false });
+  // ✅ Use Headless Mode for CI/CD
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
-    // Send authentication request
     const response = await page.request.post(`${credentials.baseUrl}/iam/token`, {
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +33,6 @@ test("POST /iam/token - Generate Auth Token", async () => {
     const responseBody = await response.json();
     console.log("✅ Generated Token:", responseBody.access_token);
 
-    // Save Token for Later Use
     setToken(responseBody.access_token, responseBody.token_type, responseBody.expires_in);
   } catch (error) {
     console.error("🚨 Unexpected Error During Auth Token Request:", error);
