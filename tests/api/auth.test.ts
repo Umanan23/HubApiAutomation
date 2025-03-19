@@ -5,8 +5,14 @@ import { setToken } from "../../config/token";
 test("POST /iam/token - Generate Auth Token", async ({ request }) => {
   console.log("🔄 Requesting Authentication Token...");
 
+  // ✅ Debugging: Check if credentials are being loaded
+  console.log("🔍 Debug: Loaded credentials:", credentials);
+
   try {
     const response = await request.post(`${credentials.baseUrl}/iam/token`, {
+      headers: {
+        "Content-Type": "application/json",  // ✅ Ensure correct content type
+      },
       data: {
         grant_type: "password",
         username: credentials.username,
@@ -16,9 +22,13 @@ test("POST /iam/token - Generate Auth Token", async ({ request }) => {
 
     console.log(`📢 Response Status: ${response.status()}`);
 
+    // ✅ Debugging: Log full response in case of failure
     if (response.status() !== 200) {
-      console.error("❌ Authentication Failed:", await response.text());
-      throw new Error(`Failed to fetch auth token - Status: ${response.status()}`);
+      const errorBody = await response.text();
+      console.error(`❌ Authentication Failed:`, errorBody);
+      
+      // ✅ Throwing detailed error message for CI debugging
+      throw new Error(`Failed to fetch auth token - Status: ${response.status()}\nResponse Body: ${errorBody}`);
     }
 
     const responseBody = await response.json();
