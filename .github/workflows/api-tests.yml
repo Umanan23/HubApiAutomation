@@ -21,6 +21,12 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Create .env file
+        run: |
+          echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" >> .env
+          echo "API_USERNAME=${{ secrets.API_USERNAME }}" >> .env
+          echo "API_PASSWORD=${{ secrets.API_PASSWORD }}" >> .env
+
       - name: Install dependencies
         run: |
           rm -rf node_modules package-lock.json  # Clean install
