@@ -4,15 +4,13 @@ import { setToken } from "../../config/token";
 
 test("POST /iam/token - Generate Auth Token", async ({ request }) => {
   console.log("🔄 Requesting Authentication Token...");
-
-  // ✅ Debugging: Check if credentials are being loaded
   console.log("🔍 Debug: Loaded credentials:", credentials);
 
-  try {
-    const response = await request.post(`${credentials.baseUrl}/iam/token`, {
-      headers: {
-        "Content-Type": "application/json",  // ✅ Ensure correct content type
-      },
+  let retryCount = 0;
+  let response;
+
+  while (retryCount < 3) {
+    response = await request.post(`${credentials.baseUrl}/iam/token`, {
       data: {
         grant_type: "password",
         username: credentials.username,
@@ -22,22 +20,19 @@ test("POST /iam/token - Generate Auth Token", async ({ request }) => {
 
     console.log(`📢 Response Status: ${response.status()}`);
 
-    // ✅ Debugging: Log full response in case of failure
-    if (response.status() !== 200) {
-      const errorBody = await response.text();
-      console.error(`❌ Authentication Failed:`, errorBody);
-      
-      // ✅ Throwing detailed error message for CI debugging
-      throw new Error(`Failed to fetch auth token - Status: ${response.status()}\nResponse Body: ${errorBody}`);
-    }
+    if (response.status() === 200) break; // Success ✅
 
-    const responseBody = await response.json();
-    console.log("✅ Generated Token:", responseBody.access_token);
-
-    // ✅ Save Token for Later Use
-    setToken(responseBody.access_token, responseBody.token_type, responseBody.expires_in);
-  } catch (error) {
-    console.error("🚨 Unexpected Error During Auth Token Request:", error);
-    throw error;
+    console.error(`❌ Authentication Failed (Attempt ${retryCount + 1}/3)`);
+    retryCount++;
+    await new Promise((res) => setTimeout(res, 2000)); // Wait before retrying
   }
+
+  if (response.status() !== 200) {
+    throw new Error(`❌ Authentication failed after 3 attempts - Status: ${response.status()}`);
+  }
+
+  const responseBody = await response.json();
+  console.log("✅ Generated Token:", responseBody.access_token);
+
+  setToken(responseBody.access_token, responseBody.token_type, responseBody.expires_in);
 });

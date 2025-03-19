@@ -1,5 +1,10 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export const credentials = {
-  baseUrl: "https://stage.anaconda.com/api",
-  username: "usamamanan23@gmail.com",
-  password: "Usama12345",
+  baseUrl: process.env.API_BASE_URL || "https://stage.anaconda.com/api",
+  username: process.env.API_USERNAME || "",
+  password: process.env.API_PASSWORD || "",
 };
+
+console.log("🔍 Debug: Loaded credentials:", credentials);
