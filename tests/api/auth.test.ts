@@ -24,7 +24,7 @@ test("POST /iam/token - Generate Auth Token", async ({ request }) => {
     const responseBody = await response.json();
     console.log("✅ Generated Token:", responseBody.access_token);
 
-    // Save Token for Later Use
+    // ✅ Save Token for Later Use
     setToken(responseBody.access_token, responseBody.token_type, responseBody.expires_in);
   } catch (error) {
     console.error("🚨 Unexpected Error During Auth Token Request:", error);
