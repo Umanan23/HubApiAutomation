@@ -20,42 +20,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'  # Cache dependencies for faster builds
 
       - name: Install dependencies
         run: |
           rm -rf node_modules package-lock.json  # Clean install
           npm cache clean --force
           npm install
-          npm list --depth=0  # Log installed dependencies for debugging
 
       - name: Set Playwright Execution Permissions
-        run: chmod +x node_modules/.bin/playwright || true  # Ignore errors if file is missing
+        run: chmod +x node_modules/.bin/playwright
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
-      - name: Load Environment Variables
-        run: echo "Loading .env variables..." && cat .env  # Log for debugging (remove in production)
 
       - name: Generate Authentication Token
         run: npx playwright test tests/api/auth.test.ts
 
       - name: Run API Tests
         run: npx playwright test tests/api
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
-
-      - name: Upload Playwright Test Results (if failed)
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-test-results
-          path: test-results/
-
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: playwright-report/
